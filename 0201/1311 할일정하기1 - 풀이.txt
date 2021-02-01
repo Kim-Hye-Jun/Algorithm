@@ -1,0 +1,32 @@
+int dp[20][1<<20]; -->  dp[0~N-1][완료한 사람] 
+일은 1번째 일부터 하나하나 하는걸로 시작한다 ( 0~ N-1)
+그리고 두번째 인자로 누가 일을 끝마쳤는지 비트마스크를 통해 알수있게한다
+
+solve(int cur, int complete) 에서
+complete만큼(사람) 완료했고 cur번째 일을 시작할 예정
+
+if(cur==N-1)
+  {
+    return cost[N-1][check(((1<<N)-1)^complete)];
+  }
+
+마지막 일을 할 때 일을 하지 않은 사람이 일을 하면 얼마나 비용이 드는지 return
+
+  int &ret = dp[cur][complete];
+
+for(int i=0;i<N;i++)
+  {
+    if((complete&(1<<i))==0)
+    {
+      ret = min(ret,solve(cur+1,complete|(1<<i))+cost[cur][i]);
+    }
+  }
+
+cur 번째 일을 i라는 사람이 했다는 가정으로 연산
+
+--> dp에는 그 이후에(cur) 일을 한사람들의 최소비용이 담긴다
+
+cur 을 0으로 줄여가면서 점점 최솟값을 구함
+
+결국 solve(0,0)에 답이 담긴다
+(0번째 일을 할 예정이고 지금까지 0의 일을 함)
