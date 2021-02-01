@@ -1,0 +1,55 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+int cost[16][16];
+int N;
+int dp[16][1<<16];
+
+void init();
+int solve(int cur,int visit);
+
+int main() {
+  init();
+  cout << solve(0,1);
+
+}
+
+void init()
+{
+  cin >> N;
+  for(int y=0;y<N;y++)
+  {
+    for(int x=0;x<N;x++)
+    {
+      cin >> cost[y][x];
+    }
+  }
+  memset(dp,0,sizeof(dp));
+}
+
+int solve(int cur,int visit)
+{
+  if(visit == (1<<N)-1)
+  {
+    if(cost[cur][0])
+      return cost[cur][0];
+    else
+      return 17000000;
+  }
+
+  int &ret = dp[cur][visit];
+  if(ret)
+    return ret;
+  
+  ret = 17000000;
+  for(int i=0;i<N;i++)
+  {
+    if((visit&(1<<i))==0&&cost[cur][i])
+    {
+      ret = min(ret,cost[cur][i]+solve(i,visit|(1<<i)));
+    }
+  }
+  return ret;
+}
