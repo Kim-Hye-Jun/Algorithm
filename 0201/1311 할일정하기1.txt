@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+int cost[20][20];
+int N;
+int dp[20][1<<20]; // 이 일이 완료 됐는가? 이 사람이 일을 헀는가?
+
+void input();
+int check(int n);
+int solve(int cur,int complete);
+
+int main()
+{
+  input();
+  cout << solve(0,0);
+}
+
+void input()
+{
+  cin >> N;
+  for(int i=0;i<N;i++)
+  {
+    for(int j=0;j<N;j++)
+    {
+      cin >> cost[i][j];
+    }
+  }
+  memset(dp,0,sizeof(dp));
+}
+
+int solve(int cur,int complete) // complete만큼 완료 됐고 cur 번째 일을 시작할예정 
+{
+  if(cur==N-1)
+  {
+    return cost[N-1][check(((1<<N)-1)^complete)];
+  }
+
+  int &ret = dp[cur][complete];
+  if(ret>0)
+    return ret;
+  
+  ret = 200000;
+
+  for(int i=0;i<N;i++)
+  {
+    if((complete&(1<<i))==0)
+    {
+      ret = min(ret,solve(cur+1,complete|(1<<i))+cost[cur][i]);
+    }
+  }
+  return ret;
+}
+
+int check(int n)
+{
+  int ret = 0;
+  while(n!=1)
+  {
+    n>>=1;
+    ret++;
+    //cout << "!";
+  }
+  return ret;
+
+  
+}
