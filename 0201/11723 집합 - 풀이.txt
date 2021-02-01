@@ -1,0 +1,23 @@
+11723 집합 문제
+
+ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+을 통해 cout , cin 입출력 속도를 빠르게 한다
+
+그리고 S=0으로 초기설정을 하고
+string타입의 input에 명령어를 받아
+명령을 수행한다
+
+  S|=(1<<(input_num-1));
+
+S의 input_num 위치(input_num = 1일 때 맨 오른쪽)의 숫자를 1로 만들기
+
+ S&=~(1<<(input_num-1));
+
+S의 input_num 위치(input_num = 1일 때 맨 오른쪽)의 숫자를 0으로 만들기
+
+      S^=(1<<(input_num-1));
+
+S의 input_num 위치(input_num = 1일 때 맨 오른쪽)의 숫자를 바꿔주기 ( 0->1 , 1->0)
