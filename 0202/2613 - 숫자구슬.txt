@@ -1,0 +1,97 @@
+#include <iostream>
+
+using namespace std;
+void input();
+void solve();
+int check(int mid);
+
+int N,M;
+int MIN=0,MAX=0;
+int arr[300];
+
+int main()
+{
+  input();
+  solve();
+}
+
+void input()
+{
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  cin >> N >> M;
+  for(int i=0;i<N;i++)
+  {
+    cin >> arr[i];
+    MAX+=arr[i];
+    MIN = max(MIN,arr[i]);
+  }
+
+}
+
+void solve()
+{
+  int left = MIN;
+  int right = MAX;
+
+  int mid;
+
+  while(left<=right)
+  {
+    mid = (left+right)/2;
+    if(check(mid))
+      right = mid-1;
+    else
+      left = mid + 1;
+
+  }
+  cout << left << endl;
+
+  int sum=0;
+  int cnt=0;
+  int print=0;
+  for(int i=0;i<N;i++)
+  {
+    sum+=arr[i];
+    cnt++;
+    if(sum>left)
+    {
+      sum = arr[i];
+      cout << cnt-1 << " ";
+      cnt = 1;
+      print++;
+    }
+    
+    if(N-i==M-print)
+      break;
+  }
+
+  for(int i=0;i<M-print;i++)
+  {
+    cout << cnt << " ";
+    cnt =1;
+  }
+
+}
+
+int check(int mid)
+{
+  int sum=0;
+  int cnt=1;
+  
+  for(int i=0;i<N;i++)
+  {
+    sum += arr[i];
+    if(sum>mid)
+    {
+      sum = arr[i];
+      cnt++;
+    }
+  }
+  
+  if(cnt>M)
+    return 0;
+  
+  return 1;
+}
