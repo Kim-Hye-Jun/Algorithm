@@ -1,0 +1,56 @@
+#include <iostream>
+using namespace std;
+
+int N,S,input,total=0;
+int arr[100001];
+void init();
+
+int main() {
+  
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+  init();
+
+  if(S>total)
+  {
+    cout << 0;
+    return 0;
+  }
+
+  int front=1,end=1;
+  int X=0;
+  int ret=100001;
+  while(1)
+  {
+
+    if(X>=S)
+    {
+      ret = min(ret,end-front);
+      if(ret==1)
+        break;
+      
+      front++;
+      X-=arr[front-1];
+    }
+    else
+    {
+      end++;
+      if((end-1)>N)
+        break;
+      X+=arr[end-1];
+    }
+  }
+  cout << ret;
+}
+
+void init()
+{
+  cin >> N >> S;
+  for(int i=1;i<=N;i++)
+  {
+    cin >> arr[i];
+    total+=arr[i];
+  }
+}
