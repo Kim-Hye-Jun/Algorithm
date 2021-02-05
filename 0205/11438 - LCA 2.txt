@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#define inf 1000000000
+using namespace std;
+
+void dfs(int,int);
+void update(int,int,int);
+pair<int,int> query(int l,int r,int nodeNum, int nodeL,int nodeR);
+
+vector<vector <int>> Tree;
+vector<pair<int,int>> seg;
+int depth[100005];
+int idx[100005];
+
+int N,cnt=1,height=1;
+int main() {
+
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+  cin >> N;
+  Tree.resize(N+1);
+  int node1,node2;
+  for(int i=0;i<N-1;i++)
+  {
+    cin >> node1 >> node2;
+    Tree[node1].push_back(node2);
+    Tree[node2].push_back(node1); 
+  }
+
+  memset(depth,-1,sizeof(depth));
+  while(height<N*2) height<<=1;
+  seg.resize(height*2,{inf,0});
+  dfs(1,0);
+  int M;
+  cin >> M;
+  for(int i=0;i<M;i++)
+  {
+    cin >> node1 >> node2;
+    cout << query(min(idx[node1],idx[node2]),max(idx[node1],idx[node2]),1,1,height).second << "\n";
+  }
+}
+
+void dfs(int u,int D)
+{
+  depth[u] = D;
+  idx[u] = cnt;
+  update(cnt++,D,u);
+  
+  for(auto w : Tree[u])
+  {
+    if(depth[w]==-1)
+    {
+      dfs(w,D+1);
+      update(cnt++,D,u);
+    }
+  }
+}
+
+void update(int i,int val,int u)
+{
+  i += height-1;
+  seg[i] = {val,u};
+  while(i>1)
+  {
+    i/=2;
+    seg[i] = min(seg[i*2],seg[i*2+1]);
+  }
+}
+
+pair<int,int> query(int l,int r,int nodeNum, int nodeL,int nodeR)
+{
+  if(l <= nodeL && nodeR <= r) return seg[nodeNum];
+  else if(r<nodeL || nodeR<l) return {inf,inf};
+
+  int mid = (nodeL+nodeR)/2;
+  return min(query(l,r,nodeNum*2,nodeL,mid), query(l,r,nodeNum*2+1,mid+1,nodeR));
+}
