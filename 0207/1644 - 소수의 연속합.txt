@@ -1,0 +1,67 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
+void init();
+int N;
+int arr[4000001];
+vector <int> sosu; 
+
+int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+  init();
+  int a=0,b=0,total=0,ret=0;
+  int p=sosu.size();
+  sosu.push_back(0);
+  while(1)
+  {
+    if(b>p||a>(p-1))
+      break;
+    
+    if(total<N)
+    {
+      total+=sosu[b];
+      b++;
+    }
+    else if(total>N)
+    {
+      total-=sosu[a];
+      a++;
+    }
+    else
+    {
+      ret++;
+      total-=sosu[a];
+      a++; 
+    }
+  }
+  cout << ret;
+  
+
+}
+
+void init()
+{
+  cin >> N;
+  arr[0]=0;
+  arr[1]=0;
+  for(int i=2;i<=N;i++) arr[i]=i;
+
+  for(int i=2;i<=sqrt(N);i++)
+  {
+    if(arr[i]==0) continue;
+    for(int j=i*2;j<=N;j+=i)
+    {
+      arr[j]=0;
+    }
+  }
+  for(int i=2;i<=N;i++)
+  {
+    if(arr[i]) sosu.push_back(arr[i]);
+  }
+}
