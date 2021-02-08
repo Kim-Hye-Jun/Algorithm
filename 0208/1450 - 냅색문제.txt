@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int aSum[33000];
+int bSum[33000];
+int input[30];
+int N,C,idx;
+int aSize=0,bSize=0;
+void solve_left(int,int);
+void solve_right(int,int);
+void bSearch(int,int,int);
+
+int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  
+  cin >> N >> C;
+  for(int i=0;i<N;i++)
+  {
+    cin >> input[i];
+  }
+
+  solve_left(0,0);
+  solve_right(N/2,0);
+  sort(bSum,bSum + bSize);
+  
+
+  int ret=0;
+  
+  for(int i=0;i<aSize;i++)
+  { 
+    idx=-1;
+    bSearch(aSum[i],0,bSize-1);
+    ret+=(idx+1);
+  }
+
+  cout << ret;
+}
+// 0 ~ N/2- 1
+void solve_left(int i,int sum)
+{
+  if(sum>C) return;
+  if(i==N/2)
+  {
+    aSum[aSize++]=sum;
+    return;
+  }
+  solve_left(i+1,sum+input[i]);
+  solve_left(i+1,sum);
+}
+
+// N/2 ~ N-1
+void solve_right(int i,int sum)
+{
+  if(sum>C) return;
+  if(i==N)
+  {
+    bSum[bSize++]=sum;
+    return;
+  }
+  solve_right(i+1,sum+input[i]);
+  solve_right(i+1,sum);
+}
+
+void bSearch(int val,int l,int r)
+{
+  if(l>r) return;
+  int mid = (l+r)/2;
+
+  if(val + bSum[mid] <= C)
+  {
+    idx = mid;
+    bSearch(val, mid+1 ,r);
+  }
+  else 
+    return bSearch(val, l, mid-1);
+}
