@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+int arr[1000000];
+vector <int> LCS;
+
+void solve(int);
+
+int main()
+{
+  ios_base :: sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  int N;
+  cin >> N;
+  for(int i=0;i<N;i++)
+  {
+    cin >> arr[i];
+  }
+
+  LCS.push_back(arr[0]);
+
+  for(int i=1;i<N;i++)
+  {
+    solve(arr[i]);
+  }
+  
+  cout << LCS.size();
+
+
+}
+
+void solve(int value)
+{
+  if(LCS.back()<value)
+    LCS.push_back(value);
+  
+  int mid,start,end;
+  start=0;
+  end=LCS.size()-1;
+
+  while(end>start)
+  {
+    mid = (start + end) / 2;
+    if(LCS[mid]>=value)
+      end = mid;
+    else
+      start = mid + 1;
+  }
+  LCS[end] = value;
+}
