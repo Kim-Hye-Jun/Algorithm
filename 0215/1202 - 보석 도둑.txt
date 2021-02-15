@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+
+using namespace std;
+
+int N,K;
+int m,v;
+long long total=0;
+vector<pair<int,int>> JW;
+multiset <int> BAG;
+
+bool compare(pair<int,int> V1,pair<int,int> V2);
+void input();
+void solve();
+int main() {
+  input();
+  solve();
+  cout << total;
+}
+
+void input()
+{
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  cin >> N >> K;
+  for(int i=0;i<N;i++)
+  {
+    cin >> m >> v;
+    JW.push_back(make_pair(m,v));
+  }// (무게, 가격)
+
+  
+  for(int i=0;i<K;i++)
+  {
+    cin >> m;
+    BAG.insert(m);
+  }
+
+  sort(JW.begin(),JW.end(),compare);
+}
+
+bool compare(pair<int,int> V1,pair<int,int> V2)
+{
+  return V1.second > V2.second;
+}
+
+void solve()
+{
+  int l;
+  for(auto w : JW)
+  {
+    multiset<int> :: iterator iter = BAG.lower_bound(w.first);   
+    if(iter==BAG.end())
+      continue;
+    
+    BAG.erase(iter);
+    total += w.second;  
+  }
+}
