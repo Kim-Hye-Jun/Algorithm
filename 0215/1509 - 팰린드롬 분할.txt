@@ -1,0 +1,70 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+string input;
+vector <vector<int>> location;
+int dp[2500];
+
+bool check(int a,int b);
+
+int main() {
+  ios_base :: sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  
+  cin >> input;
+  location.resize(26);
+  for(int i=0;i<input.length();i++)
+  {
+    location[input.at(i)-'A'].push_back(i);
+  }
+  memset(dp,9999,sizeof(dp));
+  int ret=0;
+  for(int i=0;i<input.length();i++)
+  {
+
+    for(auto w : location[input.at(i)-'A'])
+    {
+      if(i<=w)
+      {
+        
+      if(check(i,w))
+      {
+        if(i>0)
+        {
+          dp[w] = min(1+dp[i-1],dp[w]);
+        }
+        else
+        {
+          dp[w]=1;
+        }
+        
+      }
+      }
+    }
+  }
+
+  cout << dp[input.length()-1];
+  
+
+}
+
+bool check(int a,int b)
+{
+  bool ret = true;
+  while(a<=b)
+  {
+    if(input.at(a)!=input.at(b))
+    {
+      ret = false;
+      break;
+    }
+    a++;
+    b--;
+  }
+
+  return ret;
+}
