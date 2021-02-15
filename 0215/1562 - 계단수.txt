@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+void input();
+long long solve(int,int,int);
+int N;
+
+long long dp[(1<<10)+1][102][11];
+
+int main() {
+  input();
+  if(N<10)
+  {
+    cout << 0;
+    return 0;
+  }
+  else
+  {
+    cout << solve(0,0,0);
+  }
+
+}
+
+void input()
+{
+  ios_base :: sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+  cin >> N;
+  memset(dp,-1,sizeof(dp));
+}
+
+long long solve(int n, int k , int t)
+{
+  if(n==0)
+  {
+    long long total=0;
+    for(int i=1;i<=9;i++)
+    {
+      total+=solve(1,1<<i,i);
+    }
+    return total%1000000000;
+  }
+  if(t<0||t>9) return 0;
+
+  if(n==N)
+  {
+    if(k==(1<<10)-1)
+      return 1;
+    else
+      return 0;
+  }
+
+  long long &ret = dp[k][n][t];
+  if(ret!=-1)
+    return ret;
+ 
+  ret = solve(n+1,k|(1<<(t-1)),t-1)+solve(n+1, k|(1<<(t+1)),t+1);
+  ret %=1000000000;
+  return ret;
+}
