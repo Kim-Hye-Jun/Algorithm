@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cstring>
+#include <tuple>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<ll,ll> p;
+typedef tuple<ll,int,int> tp;
+
+void input();
+void solve();
+
+vector <p> adj[10001];
+ll dist[10001][21];
+
+int N,M,K;
+int main() {
+  input();
+  solve();
+  ll ans = 1e18;
+  for(int i=0;i<=K;i++)
+  {
+    ans = min(ans,dist[N][i]);
+  }
+  cout << ans;
+
+}
+
+void input()
+{
+  ios_base :: sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+  cin >> N >> M >> K;
+
+  int a,b;
+  ll c;
+  for(int i=0;i<M;i++)
+  {
+    cin >> a >> b >> c;
+    adj[a].push_back(make_pair(b,c));
+    adj[b].push_back(make_pair(a,c));
+  }
+}
+void solve()
+{
+  priority_queue<tp> pq;
+  pq.push({0,1,0});
+
+  memset(dist,0x3f,sizeof dist);
+  dist[1][0] = 0;
+  while(!pq.empty())
+  {
+    tp nowN = pq.top();
+    pq.pop();
+    
+    ll cost;
+    int now;
+    int cnt;
+
+    tie(cost,now,cnt) = nowN;
+    cost = -cost;
+
+    if(dist[now][cnt]<cost) continue;
+    
+    for(int i=0;i<adj[now].size();i++)
+    {
+      int next = adj[now][i].first;
+      ll weight = adj[now][i].second;
+
+      if(cost+weight < dist[next][cnt])
+      {
+        dist[next][cnt] = cost + weight;
+        pq.push(make_tuple(-dist[next][cnt],next,cnt));
+      }
+      if(cnt<K && cost < dist[next][cnt+1])
+      {
+        dist[next][cnt+1] = cost;
+        pq.push(make_tuple(-dist[next][cnt+1],next,cnt+1));
+      }
+    }
+    
+  }
+}
