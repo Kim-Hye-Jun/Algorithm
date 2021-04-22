@@ -1,0 +1,19 @@
+이 문제는 문자열 파싱을 해서
+숫자와 연산자 각각 deque(덱)에 입력받고
+재귀를 통해서 계속해서 연산을 해나가는 식으로 풀었다.
+
+void input()
+{
+  long long a,b;
+  char c;
+  for(scanf("%lld",&a);scanf("%c",&c),c!=10;)
+  {
+    number.push_back(a);
+    oper.push_back(c);
+    scanf("%lld",&a);
+  }
+  number.push_back(a);
+}
+
+이런 방식으로 문자열 파싱을 할 수 있다는 점이 신기했고
+덱에 대한 내용을 공부할 수 있었다!
