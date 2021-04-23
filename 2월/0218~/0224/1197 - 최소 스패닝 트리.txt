@@ -1,0 +1,100 @@
+#include <iostream>
+#include <queue>
+#include <tuple>
+using namespace std;
+
+
+priority_queue <tuple<int,int,int>> pq;
+int V,E;
+int parent[10001];
+int Rank[10001];
+int num[10001];
+
+int ret;
+
+void input();
+int root(int k);
+void Union(int a,int b);
+
+int main() {
+  input();
+}
+
+void input()
+{
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  
+  cin >> V >> E;
+  int a,b,w;
+
+  for(int i=1;i<=V;i++)
+  {
+    parent[i] = i;
+    Rank[i] = 1;
+    num[i]=1;
+  }
+
+  for(int i=0;i<E;i++)
+  {
+    cin >> a >> b >> w;
+    pq.push({-w,a,b});
+  }
+
+  while(!pq.empty())
+  {
+    tuple<int,int,int> now = pq.top();
+    pq.pop();
+    int cost;
+    int A,B;
+
+    tie(cost,A,B)=now;
+    cost=-cost;
+
+    if(root(A)!=root(B))
+    {
+      ret+=cost;
+      Union(A,B);
+    }
+  }
+}
+
+void Union(int a,int b)
+{
+  if(Rank[root(a)]==Rank[root(b)])
+  {
+    num[root(a)]+=num[root(b)];
+    Rank[root(a)]+=1;
+    parent[root(b)]=root(a);
+  }
+  else if(Rank[root(a)]>Rank[root(b)])
+  {
+    num[root(a)]+=num[root(b)];
+    parent[root(b)]=root(a);
+  }
+  else
+  {
+    num[root(b)]+=num[root(a)];
+    parent[root(a)]=root(b);
+    
+  }
+
+  
+  if(num[root(a)]==V)
+  {
+    cout << ret;
+    exit(0);
+  }
+    
+  return;
+}
+
+int root(int k)
+{
+  while(parent[k]!=k)
+  {
+    k=parent[k];
+  }
+  return k;
+}

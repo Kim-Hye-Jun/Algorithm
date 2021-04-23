@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+int N,M;
+void input();
+void DFS(int a,int d);
+
+
+#define inf 1000000000
+typedef long long ll;
+typedef pair<int, int> Pair;
+
+vector <vector<int>> adj;
+int depth[50001];
+int idx[50001];
+int cnt=1,h=1;
+vector<Pair> Tree;
+
+
+Pair query(int l, int r, int nodeNum, int nodeL, int nodeR);
+void update(int i,int val,int u);
+
+int main() {
+    input();
+    
+}
+
+void input()
+{
+  ios_base :: sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+  cin >> N;
+  int a,b;
+  adj.resize(N+1);
+  memset(depth,-1,sizeof(depth));
+
+  depth[1]=1;
+  
+  for(int i=0;i<N-1;i++)
+  {
+    cin >> a >> b;
+    adj[a].push_back(b);
+    adj[b].push_back(a);
+  }
+  while(h<2*N) h<<=1;
+  Tree.resize(2*h,{inf,0});
+  int start=1;
+  DFS(1,0);
+  cin >> M;
+  for(int i=0;i<M;i++)
+  {
+    cin >> a >> b;
+    cout << query(min(idx[a],idx[b]),max(idx[a],idx[b]),1,1,h).second << endl;
+  }
+  
+}
+
+void DFS(int a,int d)
+{
+  depth[a]=d;
+  idx[a]=cnt;
+  update(cnt++,d,a);
+  for(auto w:adj[a])
+  {
+    if(depth[w]==-1)
+    {
+      DFS(w,d+1);
+      update(cnt++,d,a);
+    }
+  }
+  return;
+}
+
+Pair query(int l, int r, int nodeNum, int nodeL, int nodeR) {
+	if (l <= nodeL&& nodeR <= r) return Tree[nodeNum];
+	else if (r < nodeL || nodeR < l) return{ inf,inf };
+	int mid = (nodeL + nodeR) / 2;
+	return min(query(l, r, nodeNum * 2, nodeL, mid), query(l, r, nodeNum * 2 + 1, mid + 1, nodeR));
+}
+void update(int i,int val,int u)
+{
+  i += h-1;
+  Tree[i] = {val,u};
+  while(i>1)
+  {
+    i/=2;
+    Tree[i] = min(Tree[i*2],Tree[i*2+1]);
+  }
+}

@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+
+void input();
+void solve();
+bool compare(pair<int,int>, pair<int,int> b);
+int N;
+vector<pair<int,int>> V;
+vector<int> LIS;
+set<int> ans;
+int dp[500001];
+int A[500001];
+
+
+int main() {
+  input();
+  solve();
+
+}
+
+void input()
+{
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+  cin >> N;
+  int a,b;
+  for(int i=0;i<N;i++)
+  {
+    cin >> a >> b;
+    V.push_back(make_pair(a,b));
+    A[b]=a;
+    ans.insert(a);
+  }
+  sort(V.begin(),V.end(),compare);
+}
+
+void solve()
+{
+  int MAX = 0,MAX_N;
+  dp[0] = 1;
+  LIS.push_back(V[0].second);
+
+  for(int i=1;i<N;i++)
+  {
+    dp[i]=1;
+    if(LIS.back()<V[i].second)
+    {
+      LIS.push_back(V[i].second);
+      dp[i] = LIS.size();
+      if(dp[i]>MAX)
+      {
+        MAX = dp[i];
+        MAX_N = i;
+      }
+    }
+    else
+    {
+      auto it = lower_bound(LIS.begin(),LIS.end(),V[i].second);
+      *it = V[i].second;
+      dp[i] = 1 + distance(LIS.begin(), it);
+    }
+  }
+
+  cout << V.size() - MAX << "\n";
+  for(int i=MAX_N;i>=0;i--)
+  {
+    if(dp[i]==MAX)
+    {
+      ans.erase(A[V[i].second]);
+      MAX--;
+    }
+  }
+  for(auto w:ans)
+    cout << w << "\n";
+
+
+
+}
+
+bool compare(pair<int,int> a, pair<int,int> b)
+{
+  return a.first < b.first;
+}

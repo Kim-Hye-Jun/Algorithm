@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <queue>
+#include <tuple>
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int,int> p;
+typedef tuple<ll,int,int> tp;
+
+void input();
+void solve();
+
+int N,M;
+vector <p> adj[2501];
+bool visit[2501][2501]; // 정점 / 최소기름값
+int arr[2501];
+
+// 도시의수 , 도로의수 <=2500
+// 리터당 가격 <=2500
+// 도로의길이 <=2500
+// 2500 * 2500 * 2500
+
+int main() {
+  input();
+  solve();
+  
+}
+
+
+void input()
+{
+  ios_base:: sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+
+  cin >> N >> M;
+  int a,b,c;
+  for(int i=1;i<=N;i++)
+  {
+    cin >> arr[i]; // 주유소 리터당 가격
+  }
+
+  for(int i=0;i<M;i++)
+  {
+    cin >> a >> b >> c;
+    adj[a].push_back({b,c});
+    adj[b].push_back({a,c});
+  }
+
+}
+
+void solve()
+{
+  priority_queue<tp> pq;
+  // 총 비용, 현 정점 , 최소기름값
+  pq.push({0,1,arr[1]});
+
+  while(!pq.empty())
+  {
+    tp nowN = pq.top();
+    pq.pop();
+    ll cost;    
+    int now;
+    int min_oil;
+    tie(cost,now,min_oil) = nowN;
+    cost = -cost;
+
+    if(now==N)
+    {
+      cout << cost;
+      break;
+    }
+
+    if(visit[now][min_oil])
+      continue;
+    
+    visit[now][min_oil] = true; 
+    
+    for(auto w: adj[now])
+    {
+      int next = w.first;
+      int weight = w.second;
+      int oil = min(min_oil,arr[next]);
+
+      pq.push({-(cost+min_oil*weight),next,oil});
+    }
+
+  }
+
+
+}
