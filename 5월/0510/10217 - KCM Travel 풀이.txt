@@ -1,0 +1,24 @@
+다익스트라 알고리즘을 공부하면서
+dp를 적용한 문제이다.
+
+풀이방식은 dist[V][cost]에 
+1번 정점에서 V번정점으로 cost의 비용으로 갈수있는 최단거리를 저장한다.
+
+계속 해서 저장한다.
+
+그 후 dist[V][0~M]에서 최솟값을 꺼낸다.
+
+struct Data{
+	to
+	cost
+	time
+}
+
+구조체를 priority_queue에 담기
+priority_queue<Data,vector<Data>,comp> pq;
+
+struct comp{
+ bool operator()(const Data &a,const Data &b) const{
+	return a.time > b.time;
+}
+};
